@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         Title="Temporal Discounting Indices" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Small_N_Stats.View"
@@ -12,6 +13,13 @@
         Width="400"
         ResizeMode="NoResize"
         EnableDWMDropShadow="True">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>

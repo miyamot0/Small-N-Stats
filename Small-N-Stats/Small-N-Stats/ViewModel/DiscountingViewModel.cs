@@ -151,23 +151,35 @@ namespace Small_N_Stats.ViewModel
 
         /* Commands */
 
+        public RelayCommand ViewLoadedCommand { get; set; }
         public RelayCommand GetDelaysRangeCommand { get; set; }
         public RelayCommand GetValuesRangeCommand { get; set; }
         public RelayCommand CalculateScoresCommand { get; set; }
 
         public DiscountingViewModel()
         {
+            ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);
             GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
             CalculateScoresCommand = new RelayCommand(param => CalculateScores(), param => true);
+        }
+
+        private void ViewLoaded()
+        {
+            mInterface.SendMessageToOutput("---------------------------------------------------");
+            mInterface.SendMessageToOutput("Loading Discounting modules and R interface...");
 
             mDiscount = new Modeling();
+
+            mInterface.SendMessageToOutput("Discounting modules loaded.");
 
             /* Prepares R DLLs for fitting */
 
             REngine.SetEnvironmentVariables();
             engine = REngine.GetInstance();
             engine.Initialize();
+
+            mInterface.SendMessageToOutput("R interop modules loaded.");
         }
 
         /* Fields to be RED while picking ranges */

@@ -27,6 +27,7 @@ namespace Small_N_Stats.ViewModel
 
         public RelayCommand DiscountingWindowCommand { get; set; }
         public RelayCommand EscalationWindowCommand { get; set; }
+        public RelayCommand TheilSenWindowCommand { get; set; }
 
         /* End Menu Items */
 
@@ -63,9 +64,27 @@ namespace Small_N_Stats.ViewModel
 
             DiscountingWindowCommand = new RelayCommand(param => OpenDiscountingWindow(), param => true);
             EscalationWindowCommand = new RelayCommand(param => OpenEscalationWindow(), param => true);
+            TheilSenWindowCommand = new RelayCommand(param => OpenTheilSenWindow(), param => true);
 
             /* End Menu Items */
 
+        }
+
+        private void OpenTheilSenWindow()
+        {
+            var mContext = new TheilSenViewModel();
+            mContext.mWindow = MainWindow;
+            mContext.mInterface = this;
+
+            var mWin = new TheilSenWindow();
+            mWin.DataContext = mContext;
+            mWin.Owner = MainWindow;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            mWin.Topmost = true;
+
+            mContext.windowRef = mWin;
+
+            mWin.Show();
         }
 
         private void OpenDiscountingWindow()

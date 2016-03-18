@@ -85,15 +85,25 @@ namespace Small_N_Stats.ViewModel
         private const int WinHeight = 350;
 
         /* Command Logic */
+
+        public RelayCommand ViewLoadedCommand { get; set; }
         public RelayCommand GenerateDataCommand { get; set; }
         public RelayCommand LoadDataCommand { get; set; }
         public RelayCommand CalculateCommand { get; set; }
 
         public EscalationViewModel()
         {
+            ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             GenerateDataCommand = new RelayCommand(param => GenerateData(), param => true);
             LoadDataCommand = new RelayCommand(param => LoadData(), param => true);
             CalculateCommand = new RelayCommand(param => Calculate(), param => true);
+        }
+
+        private void ViewLoaded()
+        {
+            mInterface.SendMessageToOutput("---------------------------------------------------");
+            mInterface.SendMessageToOutput("Loading Bayesian Updating modules...");
+            mInterface.SendMessageToOutput("Bayesian modules loaded.");
         }
 
         /* Fields to be RED while picking ranges */

@@ -66,9 +66,9 @@
                     <MenuItem Header="_Non-overlap Indices" Name="nonparametrics" Click="nonparametrics_Click"/>
                     <MenuItem Header="_Association Indices" Name="parametrics" Click="parametrics_Click"/>
                     <MenuItem Header="_NAP/ROC Module" Name="nap" Click="nap_Click"/>
-                    <MenuItem Header="_Omnibus Tau-U" Name="omnitau" Click="omnitau_Click"/>
-                    <MenuItem Header="_Theil-Sen Difference" Name="theilsen" Click="theilsen_Click"/>
-                    -->
+                    <MenuItem Header="_Omnibus Tau-U" Name="omnitau" Click="omnitau_Click"/>                    -->
+                    <MenuItem Header="_Theil-Sen Difference" Name="theilsen" Command="{Binding TheilSenWindowCommand}"/>
+
                 </MenuItem>
 
                 <MenuItem Header="_Information">

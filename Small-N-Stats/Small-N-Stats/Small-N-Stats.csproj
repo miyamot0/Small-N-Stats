@@ -115,16 +115,19 @@
     <Compile Include="Interface\SpreadsheetInterface.cs" />
     <Compile Include="Mathematics\Escalation.cs" />
     <Compile Include="Mathematics\Modeling.cs" />
+    <Compile Include="Mathematics\Sen.cs" />
     <Compile Include="Model\ExponentialModel.cs" />
     <Compile Include="Model\HyperbolicModel.cs" />
     <Compile Include="Model\HyperboloidMyerson.cs" />
     <Compile Include="Model\HyperboloidRachlin.cs" />
     <Compile Include="Model\QuasiHyperbolicModel.cs" />
+    <Compile Include="Model\SenSlope.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\DiscountingViewModel.cs" />
     <Compile Include="ViewModel\EscalationViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\TheilSenViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\DiscountingWindow.xaml.cs">
       <DependentUpon>DiscountingWindow.xaml</DependentUpon>
@@ -134,6 +137,9 @@
     </Compile>
     <Compile Include="View\OutputWindow.xaml.cs">
       <DependentUpon>OutputWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TheilSenWindow.xaml.cs">
+      <DependentUpon>TheilSenWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Graphics\ChartingWindow.xaml">
       <SubType>Designer</SubType>
@@ -160,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OutputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TheilSenWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
