@@ -1,0 +1,202 @@
+﻿<Controls:MetroWindow x:Class="Small_N_Stats.View.DiscountingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="Temporal Discounting Indices" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Small_N_Stats.View"
+        mc:Ignorable="d"
+        TitleCaps="False"
+        Height="400" 
+        Width="400"
+        ResizeMode="NoResize"
+        EnableDWMDropShadow="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
+            FontSize="18"
+            Text="Discounting Methods"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+        </TextBlock>
+
+        <!-- Data Controls -->
+
+        <Button Name="delaysButton" 
+                Grid.Row="1" 
+                Grid.Column="0"
+                Margin="10"
+                Content="Delays"
+                Command="{Binding GetDelaysRangeCommand}">
+        </Button>
+
+        <TextBox
+            Name="baselineRange"
+            Grid.Row="1" 
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            IsReadOnly="True"
+            Margin="10"
+            Text="{Binding Delays}"
+            Background="{Binding Path=DelaysBrush}">
+        </TextBox>
+
+        <Button Name="valuesButton" 
+                Grid.Row="2" 
+                Grid.Column="0"
+                Margin="10"
+                Content="Values"
+                Command="{Binding GetValuesRangeCommand}">
+        </Button>
+
+        <TextBox
+            Name="interventionRange"
+            Grid.Row="2" 
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            IsReadOnly="True"
+            Margin="10"
+            Text="{Binding Values}"
+            Background="{Binding Path=ValuesBrush}">
+        </TextBox>
+
+        <Label Grid.Row="3" 
+               Grid.Column="0"
+               Margin="10"
+               Content="Max Value">
+        </Label>
+
+        <TextBox
+            Name="maxValue"
+            Grid.Row="3" 
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Margin="10"
+            Text="{Binding MaxValue}">
+        </TextBox>
+
+        <!-- Check Box Controls Left -->
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
+            <Label Content="Area Under Curve "></Label>
+            <CheckBox Name="checkboxAUC"
+                      VerticalAlignment="Center"
+                      Padding="0,0,25,0"
+                      IsChecked="{Binding RunAUC, Mode=TwoWay}">
+            </CheckBox>
+        </StackPanel>
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="5"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
+            <Label Content="Exponential Function "></Label>
+            <CheckBox Name="checkboxExponential"
+                      VerticalAlignment="Center"
+                      Padding="0,0,25,0"
+                      IsChecked="{Binding RunEXP, Mode=TwoWay}">
+            </CheckBox>
+        </StackPanel>
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="6"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
+            <Label Content="Hyperbolic Function "></Label>
+            <CheckBox Name="checkboxHyperbolic"
+                      VerticalAlignment="Center"
+                      Padding="0,0,25,0"
+                      IsChecked="{Binding RunHYP, Mode=TwoWay}">
+            </CheckBox>
+        </StackPanel>
+
+        <!-- Check Box Controls Right -->
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="4"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
+            <Label Content="Quasi-Hyperbolic Function "></Label>
+            <CheckBox Name="checkboxQuasi"
+                      VerticalAlignment="Center"
+                      Padding="0,0,25,0"
+                      IsChecked="{Binding RunQUASI, Mode=TwoWay}">
+            </CheckBox>
+        </StackPanel>
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="5"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
+            <Label Content="Hyperboloid Function (M) "></Label>
+            <CheckBox Name="checkboxHyperboloidMyerson"
+                      VerticalAlignment="Center"
+                      Padding="0,0,25,0"
+                      IsChecked="{Binding RunMYERSON, Mode=TwoWay}">
+            </CheckBox>
+        </StackPanel>
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="6"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right">
+            <Label Content="Hyperboloid Function (R) "></Label>
+            <CheckBox Name="checkboxHyperboloidRachlin"
+                      VerticalAlignment="Center"
+                      Padding="0,0,25,0"
+                      IsChecked="{Binding RunRACHLIN, Mode=TwoWay}">
+            </CheckBox>
+        </StackPanel>
+
+        <Button Name="calculateButton" 
+                Grid.Row="7" 
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Margin="10"
+                Content="Calculate"
+                Command="{Binding CalculateScoresCommand}">
+        </Button>
+    </Grid>
+</Controls:MetroWindow>

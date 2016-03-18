@@ -1,0 +1,30 @@
+﻿<Controls:MetroWindow x:Class="Small_N_Stats.Graphics.ChartingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:Small_N_Stats.Graphics"
+        mc:Ignorable="d"
+        ResizeMode="CanResizeWithGrip"
+        EnableDWMDropShadow="True"
+        xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+        Title="ChartingWindow" Height="300" Width="300">
+    <Grid>
+
+        <WindowsFormsHost x:Name="host" >
+            <winformchart:Chart x:Name="MyWinformChart" Dock="Fill">
+                <winformchart:Chart.Legends>
+                    <winformchart:Legend Docking="Bottom"/>
+                </winformchart:Chart.Legends>
+                <winformchart:Chart.Series>
+                    <winformchart:Series Name="series" ChartType="Line"/>
+                </winformchart:Chart.Series>
+                <winformchart:Chart.ChartAreas>
+                    <winformchart:ChartArea/>
+                </winformchart:Chart.ChartAreas>
+            </winformchart:Chart>
+
+        </WindowsFormsHost>
+    </Grid>
+</Controls:MetroWindow>

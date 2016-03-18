@@ -1,0 +1,50 @@
+﻿<Controls:MetroWindow x:Class="Small_N_Stats.View.OutputWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:local="clr-namespace:Small_N_Stats.View"
+    xmlns:settings="clr-namespace:Small_N_Stats.Properties"    
+    mc:Ignorable="d"
+    Title="Results Window" 
+    EnableDWMDropShadow="True"
+    Height="{Binding Source={x:Static settings:Settings.Default}, Path=ResultHeight, Mode=TwoWay}" 
+    Width="{Binding Source={x:Static settings:Settings.Default}, Path=ResultWidth, Mode=TwoWay}"
+    Top="{Binding Source={x:Static settings:Settings.Default}, Path=ResultTop, Mode=TwoWay}" 
+    Left="{Binding Source={x:Static settings:Settings.Default}, Path=ResultLeft, Mode=TwoWay}"
+    Closing="MetroWindow_Closing">
+
+    <!-- TODO Switch to view model later -->
+
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+
+                <MenuItem Header="_Logs">
+                    <MenuItem Header="_Save" Name="saveLogs" Click="saveLogs_Click"/>
+                    <Separator />
+                    <MenuItem Header="_Clear" Name="clearLogs" Click="clearLogs_Click"/>
+                </MenuItem>
+
+            </Menu>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                    VerticalScrollBarVisibility="Auto" 
+                    Name="Scroller">
+
+                <RichTextBox Name="outputWindow" 
+                        IsReadOnly="True"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        Width="{Binding ElementName=Scroller, Path=ViewportWidth}">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</Controls:MetroWindow>
