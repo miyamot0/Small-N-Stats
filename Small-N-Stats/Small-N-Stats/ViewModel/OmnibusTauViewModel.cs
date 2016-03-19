@@ -223,32 +223,24 @@ namespace Small_N_Stats.ViewModel
 
             mInterface.SendMessageToOutput("Comparisons of {" + BaselineRangeString + "} and {" + InterventionRangeString + "} Corrected: " + CorrectBaseline);
 
-            string mOut = string.Format("S: {0}, Pairs: {1}, Tau: {2}, TauB: {3}, P: {4}",
+            mInterface.SendMessageToOutput(string.Format("S: {0}, Pairs: {1}, Tau: {2}, TauB: {3}, P: {4}",
                 mTau.S,
                 mTau.Pairs,
                 mTau.TAU,
                 mTau.TAUB,
-                mTau.PValue);
+                mTau.PValue));
 
-            mInterface.SendMessageToOutput(mOut);
-
-            mOut = string.Format("@ 85% CI ({0} - {1})",
+            mInterface.SendMessageToOutput(string.Format("@ 85% CI ({0} - {1})",
                 mTau.CI_85[0],
-                mTau.CI_85[1]);
+                mTau.CI_85[1]));
 
-            mInterface.SendMessageToOutput(mOut);
-
-            mOut = string.Format("@ 90% CI ({0} - {1})",
+            mInterface.SendMessageToOutput(string.Format("@ 90% CI ({0} - {1})",
                 mTau.CI_90[0],
-                mTau.CI_90[1]);
+                mTau.CI_90[1]));
 
-            mInterface.SendMessageToOutput(mOut);
-
-            mOut = string.Format("@ 95% CI ({0} - {1})",
+            mInterface.SendMessageToOutput(string.Format("@ 95% CI ({0} - {1})",
                 mTau.CI_95[0],
-                mTau.CI_95[1]);
-
-            mInterface.SendMessageToOutput(mOut);
+                mTau.CI_95[1]));
 
             TauUHolder.Add(mTau);
 
@@ -269,65 +261,52 @@ namespace Small_N_Stats.ViewModel
                 return;
             }
 
-            var globalTau = 0.0;
-            var globalSETau = 0.0;
-            var wsum = 0.0;
+            /* Based on Hedges' Optimal Weighting formula */
 
-            for (var i = 0; i < tempHolder.Count; i++)
+            double globalTau = 0.0, globalSETau = 0.0;
+            double inverseSd = 0.0, inverseSdSum = 0.0;
+
+            foreach(TauUModel model in tempHolder)
             {
-                var tau = tempHolder[i].TAU;
-                var sdtau = tempHolder[i].SDtau;
-
-                var w = 1.0 / sdtau;
-
-                wsum += w;
-                globalTau += tau * w;
-                globalSETau += sdtau * sdtau;
-
+                inverseSd = 1.0 / model.SDtau;
+                inverseSdSum += inverseSd;
+                globalTau += model.TAU * inverseSd;
+                globalSETau += model.SDtau * model.SDtau;
             }
 
-            globalTau = globalTau / wsum;
+            globalTau = globalTau / inverseSdSum;
             globalSETau = System.Math.Sqrt(globalSETau) / tempHolder.Count;
 
             var z = globalTau / globalSETau;
 
-            var pval = mTauMethods.get2TailedPValue(z);
+            var pval = mTauMethods.GetPValueFromUDistribution(z, true);
 
-            double tot_w = 0.0;
-            double tot_tau = 0.0;
-            double pairs = 0;
-            double ties = 0;
-            double S = 0;
+            double totalInverseVariance = 0.0, totalTauES = 0.0;
+            double pairs = 0, ties = 0, S = 0;
 
-            for (var i = 0; i < tempHolder.Count; i++)
+            foreach(TauUModel model in tempHolder)
             {
+                totalInverseVariance += (1.0 / (model.SDtau * model.SDtau));
+                totalTauES += (model.TAU * (1.0 / (model.SDtau * model.SDtau)));
 
-                TauUModel res = tempHolder[i];
-                var w = 1.0 / (res.SDtau * res.SDtau);
-
-                tot_w += w;
-
-                tot_tau += res.TAU * w;
-
-                pairs += res.Pairs;
-                ties += res.Ties;
-                S += res.S;
-
+                pairs += model.Pairs;
+                ties += model.Ties;
+                S += model.S;
             }
 
             TauUModel omniTau = new TauUModel
             {
                 S = S,
                 Pairs = pairs,
-                TAU = tot_tau / tot_w,
+                TAU = totalTauES / totalInverseVariance,
                 TAUB = (S / (pairs * 1.0 - ties * 0.5)),
-                VARs = (1.0 / tot_w),
-                SDtau = System.Math.Sqrt(1.0 / tot_w),
+                VARs = (1.0 / totalInverseVariance),
+                SDtau = System.Math.Sqrt(1.0 / totalInverseVariance),
                 Z = z,
                 PValue = pval,
-                CI_85 = new double[] { ((tot_tau / tot_w) - 1.44 * globalSETau), ((tot_tau / tot_w) + 1.44 * globalSETau) },
-                CI_90 = new double[] { ((tot_tau / tot_w) - 1.645 * globalSETau), ((tot_tau / tot_w) + 1.645 * globalSETau) },
-                CI_95 = new double[] { ((tot_tau / tot_w) - 1.96 * globalSETau), ((tot_tau / tot_w) + 1.96 * globalSETau) },
+                CI_85 = new double[] { ((totalTauES / totalInverseVariance) - 1.44 * globalSETau), ((totalTauES / totalInverseVariance) + 1.44 * globalSETau) },
+                CI_90 = new double[] { ((totalTauES / totalInverseVariance) - 1.645 * globalSETau), ((totalTauES / totalInverseVariance) + 1.645 * globalSETau) },
+                CI_95 = new double[] { ((totalTauES / totalInverseVariance) - 1.96 * globalSETau), ((totalTauES / totalInverseVariance) + 1.96 * globalSETau) },
                 IsChecked = false,
                 IsCorrected = false
             };
@@ -335,32 +314,24 @@ namespace Small_N_Stats.ViewModel
             mInterface.SendMessageToOutput("---------------------------------------------------");
             mInterface.SendMessageToOutput("Omnibus comparison created: ");
 
-            string mOut = string.Format("Omnibus ES --- S: {0}, Pairs: {1}, Tau: {2}, TauB: {3}, P: {4}",
+            mInterface.SendMessageToOutput(string.Format("Omnibus ES --- S: {0}, Pairs: {1}, Tau: {2}, TauB: {3}, P: {4}",
                 omniTau.S,
                 omniTau.Pairs,
                 omniTau.TAU,
                 omniTau.TAUB,
-                omniTau.PValue);
+                omniTau.PValue));
 
-            mInterface.SendMessageToOutput(mOut);
-
-            mOut = string.Format("@ 85% CI ({0} - {1})",
+            mInterface.SendMessageToOutput(string.Format("@ 85% CI ({0} - {1})",
                 omniTau.CI_85[0],
-                omniTau.CI_85[1]);
+                omniTau.CI_85[1]));
 
-            mInterface.SendMessageToOutput(mOut);
-
-            mOut = string.Format("@ 90% CI ({0} - {1})",
+            mInterface.SendMessageToOutput(string.Format("@ 90% CI ({0} - {1})",
                 omniTau.CI_90[0],
-                omniTau.CI_90[1]);
+                omniTau.CI_90[1]));
 
-            mInterface.SendMessageToOutput(mOut);
-
-            mOut = string.Format("@ 95% CI ({0} - {1})",
+            mInterface.SendMessageToOutput(string.Format("@ 95% CI ({0} - {1})",
                 omniTau.CI_95[0],
-                omniTau.CI_95[1]);
-
-            mInterface.SendMessageToOutput(mOut);
+                omniTau.CI_95[1]));
 
             CorrectBaseline = false;
 
