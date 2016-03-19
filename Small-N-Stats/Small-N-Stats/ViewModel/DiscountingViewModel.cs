@@ -525,7 +525,7 @@ namespace Small_N_Stats.ViewModel
                     Backup methods
                     */
 
-                    HyperboloidMyerson hyperboloidModelMyerson = mDiscount.GetHyperboloidMyerson();
+                    HyperboloidMyersonModel hyperboloidModelMyerson = mDiscount.GetHyperboloidMyerson();
                     kVal = new double[] { hyperboloidModelMyerson.Constant, hyperboloidModelMyerson.Scaling };
                 }
 
@@ -595,7 +595,7 @@ namespace Small_N_Stats.ViewModel
                     Backup methods
                     */
 
-                    HyperboloidRachlin hyperboloidModelRachlin = await GetHyperboloidRachlin();
+                    HyperboloidRachlinModel hyperboloidModelRachlin = await GetHyperboloidRachlin();
 
                     kVal = new double[] { hyperboloidModelRachlin.Constant, hyperboloidModelRachlin.Scaling };
                 }
@@ -656,12 +656,12 @@ namespace Small_N_Stats.ViewModel
             return await Task.Factory.StartNew(() => mDiscount.GetQuasiHyperbolicModel());
         }
 
-        public static async Task<HyperboloidMyerson> GetHyperboloidMyerson()
+        public static async Task<HyperboloidMyersonModel> GetHyperboloidMyerson()
         {
             return await Task.Factory.StartNew(() => mDiscount.GetHyperboloidMyerson());
         }
 
-        public static async Task<HyperboloidRachlin> GetHyperboloidRachlin()
+        public static async Task<HyperboloidRachlinModel> GetHyperboloidRachlin()
         {
             return await Task.Factory.StartNew(() => mDiscount.GetHyperboloidRachlin());
         }

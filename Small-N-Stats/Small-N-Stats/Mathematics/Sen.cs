@@ -17,7 +17,7 @@ namespace Small_N_Stats.Mathematics
                 InterventionObservations = new List<double>();
         }
 
-        public SenSlope ComputeTheilSen(List<double> data)
+        public SenSlopeModel ComputeTheilSen(List<double> data)
         {
             List<double> data1 = data;
             List<double> data2 = data;
@@ -71,7 +71,7 @@ namespace Small_N_Stats.Mathematics
             double VARts = SDts * SDts;
             double PAIRS = pairs;
 
-            return new SenSlope
+            return new SenSlopeModel
             {
                 Observations = data,
                 Length = data.Count,
@@ -89,9 +89,9 @@ namespace Small_N_Stats.Mathematics
             };
         }
 
-        public SenSlope CompareTheilSen(SenSlope bl, SenSlope tx)
+        public SenSlopeModel CompareTheilSen(SenSlopeModel bl, SenSlopeModel tx)
         {
-            SenSlope copy = bl;
+            SenSlopeModel copy = bl;
             copy.SenSD = System.Math.Sqrt(bl.SenVariance + tx.SenVariance);
             copy.Sen = bl.Sen - tx.Sen;
             copy.Zscore = bl.Sen / System.Math.Sqrt(bl.SenVariance + tx.SenVariance);
@@ -103,7 +103,7 @@ namespace Small_N_Stats.Mathematics
             return copy;
         }
 
-        public SenSlope GetInterceptBaseline(SenSlope current)
+        public SenSlopeModel GetInterceptBaseline(SenSlopeModel current)
         {
             List<double> mx = new List<double>();
             for (int i = 0; i < current.Length; i++)
@@ -123,7 +123,7 @@ namespace Small_N_Stats.Mathematics
             return current;
         }
 
-        public SenSlope GetInterceptTreatment(SenSlope current, int prevLength)
+        public SenSlopeModel GetInterceptTreatment(SenSlopeModel current, int prevLength)
         {
             List<double> mx = new List<double>();
             for (int i = prevLength; i < current.Length + prevLength; i++)

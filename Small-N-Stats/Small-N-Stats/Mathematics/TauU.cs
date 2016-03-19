@@ -68,7 +68,7 @@ namespace Small_N_Stats.Mathematics
             return p2;
         }
 
-        public TAUU BaselineTrend(List<double> phase1, List<double> phase2, bool lessBaselineTrend)
+        public TauUModel BaselineTrend(List<double> phase1, List<double> phase2, bool lessBaselineTrend)
         {
             List<double> blCopy = new List<double>(phase1);
             List<double> txCopy = new List<double>(phase2);
@@ -129,7 +129,7 @@ namespace Small_N_Stats.Mathematics
                     Vars = n * (n - 1.0) * (2.0 * n + 5.0) / 18.0;
                 }
 
-                return new TAUU
+                return new TauUModel
                 {
                     Reflective = true,
                     S = S,
@@ -203,11 +203,11 @@ namespace Small_N_Stats.Mathematics
 
                 if (lessBaselineTrend)
                 {
-                    TAUU mBl = BaselineTrend(phase1, phase1, false);
+                    TauUModel mBl = BaselineTrend(phase1, phase1, false);
                     S -= (int)mBl.S;
                 }
 
-                return new TAUU
+                return new TauUModel
                 {
                     Reflective = true,
                     S = S,

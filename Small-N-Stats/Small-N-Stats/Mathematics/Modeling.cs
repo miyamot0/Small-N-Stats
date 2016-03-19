@@ -310,7 +310,7 @@ namespace Small_N_Stats.Mathematics
             return delay;
         }
 
-        public HyperboloidMyerson GetHyperboloidMyerson()
+        public HyperboloidMyersonModel GetHyperboloidMyerson()
         {
             List<double> distanceSquared = new List<double>();
 
@@ -363,7 +363,7 @@ namespace Small_N_Stats.Mathematics
 
             double r2 = (1 - (tempComparison / distanceSquared.Sum()));
 
-            return new HyperboloidMyerson { Constant = bestK, Scaling = bestS, rSquared = r2 };
+            return new HyperboloidMyersonModel { Constant = bestK, Scaling = bestS, rSquared = r2 };
         }
 
         public double getHyperboloidMyersonR2(double k, double s)
@@ -404,7 +404,7 @@ namespace Small_N_Stats.Mathematics
             return look;
         }
 
-        public HyperboloidRachlin GetHyperboloidRachlin()
+        public HyperboloidRachlinModel GetHyperboloidRachlin()
         {
             List<double> distanceSquared = new List<double>();
 
@@ -456,7 +456,7 @@ namespace Small_N_Stats.Mathematics
 
             double r2 = (1 - (tempComparison / distanceSquared.Sum()));
 
-            return new HyperboloidRachlin { Constant = bestK, Scaling = bestS, rSquared = r2 };
+            return new HyperboloidRachlinModel { Constant = bestK, Scaling = bestS, rSquared = r2 };
         }
 
         public double getHyperboloidRachlinR2(double k, double s)

@@ -2,7 +2,7 @@
 
 namespace Small_N_Stats.Model
 {
-    class SenSlope
+    class SenSlopeModel
     {
         public List<double> Observations { get; set; }
         public int Length { get; set; }

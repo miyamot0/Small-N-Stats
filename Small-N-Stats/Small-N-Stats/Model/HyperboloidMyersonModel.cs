@@ -1,6 +1,6 @@
 ﻿namespace Small_N_Stats.Model
 {
-    class HyperboloidRachlin
+    class HyperboloidMyersonModel
     {
         public double Constant { get; set; }
         public double Scaling { get; set; }

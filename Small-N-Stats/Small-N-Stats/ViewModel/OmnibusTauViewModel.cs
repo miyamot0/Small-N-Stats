@@ -41,8 +41,8 @@ namespace Small_N_Stats.ViewModel
             }
         }
 
-        private ObservableCollection<TAUU> tauUHolder;
-        public ObservableCollection<TAUU> TauUHolder
+        private ObservableCollection<TauUModel> tauUHolder;
+        public ObservableCollection<TauUModel> TauUHolder
         {
             get { return tauUHolder; }
             set
@@ -103,7 +103,7 @@ namespace Small_N_Stats.ViewModel
         private ICommand _removeItemCommand;
         public ICommand RemoveItemCommand
         {
-            get { return _removeItemCommand ?? (_removeItemCommand = new RelayCommand(p => RemoveItem((TAUU)p))); }
+            get { return _removeItemCommand ?? (_removeItemCommand = new RelayCommand(p => RemoveItem((TauUModel)p))); }
         }
 
         /* Math */
@@ -130,12 +130,12 @@ namespace Small_N_Stats.ViewModel
 
             mTauMethods = new TauU();
 
-            TauUHolder = new ObservableCollection<TAUU>();
+            TauUHolder = new ObservableCollection<TauUModel>();
 
             mInterface.SendMessageToOutput("Tau-U modules loaded.");
         }
 
-        private void RemoveItem(TAUU item)
+        private void RemoveItem(TauUModel item)
         {
             if (item != null)
                 TauUHolder.Remove(item);
@@ -190,7 +190,7 @@ namespace Small_N_Stats.ViewModel
         private void CheckBaseline()
         {
             List<double> phase1 = mWindow.ParseRange(baselineRangeString);
-            TAUU mTau = mTauMethods.BaselineTrend(phase1, phase1, false);
+            TauUModel mTau = mTauMethods.BaselineTrend(phase1, phase1, false);
             mTau.Name = "Baseline: " + baselineRangeString;
             mTau.Range = baselineRangeString;
             mTau.IsChecked = false;
@@ -214,7 +214,7 @@ namespace Small_N_Stats.ViewModel
                 return;
             }
 
-            TAUU mTau = mTauMethods.BaselineTrend(phase1, phase2, CorrectBaseline);
+            TauUModel mTau = mTauMethods.BaselineTrend(phase1, phase2, CorrectBaseline);
 
             mTau.Name = "Comparisons of {" + BaselineRangeString + "} and {" + InterventionRangeString + "} Corrected: " + CorrectBaseline;
             mTau.IsCorrected = CorrectBaseline;
@@ -260,7 +260,7 @@ namespace Small_N_Stats.ViewModel
 
         private void CalculateOmnibus()
         {
-            ObservableCollection<TAUU> tempHolder = new ObservableCollection<TAUU>(TauUHolder);
+            ObservableCollection<TauUModel> tempHolder = new ObservableCollection<TauUModel>(TauUHolder);
 
             if (tempHolder.Count < 2)
             {
@@ -302,7 +302,7 @@ namespace Small_N_Stats.ViewModel
             for (var i = 0; i < tempHolder.Count; i++)
             {
 
-                TAUU res = tempHolder[i];
+                TauUModel res = tempHolder[i];
                 var w = 1.0 / (res.SDtau * res.SDtau);
 
                 tot_w += w;
@@ -315,7 +315,7 @@ namespace Small_N_Stats.ViewModel
 
             }
 
-            TAUU omniTau = new TAUU
+            TauUModel omniTau = new TauUModel
             {
                 S = S,
                 Pairs = pairs,

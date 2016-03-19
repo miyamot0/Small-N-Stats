@@ -1,6 +1,6 @@
 ﻿namespace Small_N_Stats.Model
 {
-    class TAUU
+    class TauUModel
     {
         public string Name { get; set; }
         public string Range { get; set; }

@@ -173,32 +173,32 @@ namespace Small_N_Stats.ViewModel
             mInterface.SendMessageToOutput("---------------------------------------------------");
             mInterface.SendMessageToOutput("Calculating T-Sen Slopes: Baseline");
 
-            SenSlope bl = mSenObj.ComputeTheilSen(blRange);
+            SenSlopeModel bl = mSenObj.ComputeTheilSen(blRange);
 
             mInterface.SendMessageToOutput(System.String.Format("Baseline --- TS: {0},  SE-Slope: {1}, Z: {2}, P value: {3}", bl.Sen, bl.SenSD, bl.Zscore, bl.P));
             mInterface.SendMessageToOutput((System.String.Format("Baseline --- @ 85% CI: ({0} - {1}", bl.TS85[0], bl.TS85[1])));
             mInterface.SendMessageToOutput((System.String.Format("Baseline --- @ 90% CI: ({0} - {1}", bl.TS90[0], bl.TS90[1])));
             mInterface.SendMessageToOutput((System.String.Format("Baseline --- @ 95% CI: ({0} - {1}", bl.TS95[0], bl.TS95[1])));
 
-            SenSlope tx = mSenObj.ComputeTheilSen(txRange);
+            SenSlopeModel tx = mSenObj.ComputeTheilSen(txRange);
 
             mInterface.SendMessageToOutput(System.String.Format("Treatment --- TS: {0},  SE-Slope: {1}, Z: {2}, P value: {3}", tx.Sen, tx.SenSD, tx.Zscore, tx.P));
             mInterface.SendMessageToOutput((System.String.Format("Treatment --- @ 85% CI: ({0} - {1}", tx.TS85[0], tx.TS85[1])));
             mInterface.SendMessageToOutput((System.String.Format("Treatment --- @ 90% CI: ({0} - {1}", tx.TS90[0], tx.TS90[1])));
             mInterface.SendMessageToOutput((System.String.Format("Treatment --- @ 95% CI: ({0} - {1}", tx.TS95[0], tx.TS95[1])));
 
-            SenSlope comp = mSenObj.CompareTheilSen(bl, tx);
+            SenSlopeModel comp = mSenObj.CompareTheilSen(bl, tx);
 
             mInterface.SendMessageToOutput(System.String.Format("Difference --- TS: {0},  SE-Slope: {1}, Z: {2}, P value: {3}", comp.Sen, comp.SenSD, comp.Zscore, comp.P));
             mInterface.SendMessageToOutput((System.String.Format("Difference --- @ 85% CI: ({0} - {1}", comp.TS85[0], comp.TS85[1])));
             mInterface.SendMessageToOutput((System.String.Format("Difference --- @ 90% CI: ({0} - {1}", comp.TS90[0], comp.TS90[1])));
             mInterface.SendMessageToOutput((System.String.Format("Difference --- @ 95% CI: ({0} - {1}", comp.TS95[0], comp.TS95[1])));
 
-            SenSlope newBl = mSenObj.ComputeTheilSen(new List<double>(blRange));
-            SenSlope blInterceptObj = mSenObj.GetInterceptBaseline(newBl);
+            SenSlopeModel newBl = mSenObj.ComputeTheilSen(new List<double>(blRange));
+            SenSlopeModel blInterceptObj = mSenObj.GetInterceptBaseline(newBl);
 
-            SenSlope newTx = mSenObj.ComputeTheilSen(new List<double>(txRange));
-            SenSlope txInterceptObj = mSenObj.GetInterceptTreatment(newTx, newBl.Observations.Count);
+            SenSlopeModel newTx = mSenObj.ComputeTheilSen(new List<double>(txRange));
+            SenSlopeModel txInterceptObj = mSenObj.GetInterceptTreatment(newTx, newBl.Observations.Count);
 
             var chartWin = new ChartingWindow();
             Chart chart = chartWin.FindName("MyWinformChart") as Chart;
