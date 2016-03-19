@@ -23,21 +23,13 @@ namespace Small_N_Stats.Mathematics
             List<double> blCopy = new List<double>(BaselineObservations);
             List<double> txCopy = new List<double>(InterventionObservations);
 
-            int blN = blCopy.Count;
-            int txN = txCopy.Count;
-
-            int n = blN + txN;
-
-            int pairs = blN * txN;
-            int over = 0;
-            int under = 0;
-            int same = 0;
+            int over = 0, under = 0, same = 0;
 
             double comparer;
 
-            for (int i = 0; i < blN; i++)
+            for (int i = 0; i < blCopy.Count; i++)
             {
-                for (int j = 0; j < txN; j++)
+                for (int j = 0; j < txCopy.Count; j++)
                 {
                     comparer = txCopy[j] - blCopy[i];
 
@@ -45,8 +37,9 @@ namespace Small_N_Stats.Mathematics
                     {
                         over++;
                     }
-                    else if (comparer == 0)
+                    else if (comparer == 0 || (txCopy[j].ToString() == blCopy[i].ToString()))
                     {
+                        /* Hackish comparison to permit more reliably floating point value comparisons */
                         same++;
                     }
                     else
@@ -56,16 +49,58 @@ namespace Small_N_Stats.Mathematics
                 }
             }
 
-            double tau = ((double)over - (double)under) / (double)pairs;
-            double variance = (double)pairs * (double)(blN + txN + 1.0) / 3.0;
+            double tau = ((double)over - (double)under) / (double)(blCopy.Count * txCopy.Count);
+            double variance = (double)(blCopy.Count * txCopy.Count) * (double)(blCopy.Count + txCopy.Count + 1) / 3.0;
         }
 
-        public double get2TailedPValue(double z)
+        public double GetPValueFromUDistribution(double x, bool isTwoTailed)
         {
-            z = System.Math.Abs(z);
-            var p2 = (((((.000005383 * z + .0000488906) * z + .0000380036) * z + .0032776263) * z + .0211410061) * z + .049867347) * z + 1;
-            p2 = System.Math.Pow(p2, -16);
-            return p2;
+             /* ORIGINAL AUTHOR
+             * 
+             * Ben Tilly <btilly@gmail.com>
+             * 
+             * Originl Perl version by Michael Kospach <mike.perl@gmx.at>
+             * 
+             * Nice formating, simplification and bug repair by Matthias Trautner Kromann
+             * <mtk@id.cbs.dk>
+             * 
+             * COPYRIGHT 
+             * 
+             * Copyright 2008 Ben Tilly.
+             * 
+             * This library is free software; you can redistribute it and/or modify it
+             * under the same terms as Perl itself.  This means under either the Perl
+             * Artistic License or the GPL v1 or later.
+             */
+
+            double p = 0; 
+            var absx = System.Math.Abs(x);
+
+            if (absx < 1.9)
+            {
+                 p = System.Math.Pow((1 + absx * (.049867347 + absx * (.0211410061 + absx * (.0032776263 + absx * (.0000380036 + absx * (.0000488906 + absx * .000005383)))))), -16) / (double) 2;
+            }
+            else if (absx <= 100)
+            {
+                for (int i = 18; i >= 1; i--) 
+                {
+        			p = i / (absx + p);
+                }
+
+		        p = System.Math.Exp(-.5 * absx * absx) / System.Math.Sqrt(2 * System.Math.PI) / (absx + p);
+            }
+
+            if (x < 0)
+            {
+        	    p = 1 - p;
+            }
+
+            if (isTwoTailed)
+            {
+                p = p * 2;
+            }
+
+            return p;
         }
 
         public TauUModel BaselineTrend(List<double> phase1, List<double> phase2, bool lessBaselineTrend)
@@ -77,29 +112,31 @@ namespace Small_N_Stats.Mathematics
 
             if (blNotTx.Count < 1)
             {
+                /* BlNotTx is LINQ except list.  If n = 0, both supplied are identical */
                 // Both Phases supplied have same elements!
-                var pos = 0;
-                var neg = 0;
-                var ties = 0;
+
+                int pos = 0, neg = 0, ties = 0;
                 var pairs = 0;
 
-                var istrend = false;
-                var trend_off = 0;
                 var inc = 0;
-                var n = blCopy.Count;
-                var m = txCopy.Count;
 
-                istrend = true;
-                trend_off = 1;
+                int trend_off = 1;
 
-                for (var i = 0; i < n - trend_off; i++)
+                for (var i = 0; i < blCopy.Count - trend_off; i++)
                 {
-                    for (var j = trend_off + inc; j < m; j++)
+                    for (var j = trend_off + inc; j < txCopy.Count; j++)
                     {
+                        System.Console.WriteLine(string.Format("bl counter {0}, bl length {1}, tx counter {2}, tx length {3}",
+                            i,
+                            blCopy.Count,
+                            j,
+                            txCopy.Count));
+
                         var diff = (txCopy[j] - blCopy[i]);
 
                         if (diff == 0 || (txCopy[j].ToString() == blCopy[i].ToString()))
                         {
+                            /* Hackish workaround for odd floating point comparisons */
                             ties++;
                         }
                         else if (diff > 0)
@@ -114,20 +151,13 @@ namespace Small_N_Stats.Mathematics
                         pairs++;
                     }
 
-                    if (istrend)
-                    {
-                        inc++;
-                    }
+                    inc++;
                 }
 
                 var S = pos - neg;
-                var Vars = 0.0;
 
-
-                if (istrend)
-                {
-                    Vars = n * (n - 1.0) * (2.0 * n + 5.0) / 18.0;
-                }
+                /* Variance as Defined by two-tailed Mann-Kendall test */
+                double Vars = blCopy.Count * (blCopy.Count - 1.0) * (2.0 * blCopy.Count + 5.0) / 18.0;
 
                 return new TauUModel
                 {
@@ -141,7 +171,7 @@ namespace Small_N_Stats.Mathematics
                     SD = System.Math.Sqrt(Vars),
                     SDtau = (System.Math.Sqrt(Vars) / pairs),
                     Z = ((S / (double)pairs) / (System.Math.Sqrt(Vars) / (double)pairs)),
-                    PValue = get2TailedPValue(System.Math.Abs(((S / (double)pairs) / (System.Math.Sqrt(Vars) / (double)pairs)))),
+                    PValue = GetPValueFromUDistribution(System.Math.Abs(((S / (double)pairs) / (System.Math.Sqrt(Vars) / (double)pairs))), true),
                     CI_85 = new double[] { ((double)S / (double)pairs - 1.44 * (System.Math.Sqrt(Vars) / (double)pairs)), ((double)S / (double)pairs + 1.44 * (System.Math.Sqrt(Vars) / (double)pairs)) },
                     CI_90 = new double[] { ((double)S / (double)pairs - 1.645 * (System.Math.Sqrt(Vars) / (double)pairs)), ((double)S / (double)pairs + 1.645 * (System.Math.Sqrt(Vars) / (double)pairs)) },
                     CI_95 = new double[] { ((double)S / (double)pairs - 1.96 * (System.Math.Sqrt(Vars) / (double)pairs)), ((double)S / (double)pairs + 1.96 * (System.Math.Sqrt(Vars) / (double)pairs)) }
@@ -194,6 +224,7 @@ namespace Small_N_Stats.Mathematics
 
                 if (istrend)
                 {
+                    /* Variance as Defined by two-tailed Mann-Kendall test */
                     Vars = n * (n - 1.0) * (2.0 * n + 5.0) / 18.0;
                 }
                 else
@@ -204,7 +235,7 @@ namespace Small_N_Stats.Mathematics
                 if (lessBaselineTrend)
                 {
                     TauUModel mBl = BaselineTrend(phase1, phase1, false);
-                    S -= (int)mBl.S;
+                    S -= (int) mBl.S;
                 }
 
                 return new TauUModel
@@ -219,7 +250,7 @@ namespace Small_N_Stats.Mathematics
                     VARs = Vars,
                     SDtau = (System.Math.Sqrt(Vars) / pairs),
                     Z = ((S / (double)pairs) / (System.Math.Sqrt(Vars) / (double)pairs)),
-                    PValue = get2TailedPValue(System.Math.Abs(((S / (double)pairs) / (System.Math.Sqrt(Vars) / (double)pairs)))),
+                    PValue = GetPValueFromUDistribution(System.Math.Abs(((S / (double)pairs) / (System.Math.Sqrt(Vars) / (double)pairs))), true),
                     CI_85 = new double[] { ((double)S / (double)pairs - 1.44 * (System.Math.Sqrt(Vars) / (double)pairs)), ((double)S / (double)pairs + 1.44 * (System.Math.Sqrt(Vars) / (double)pairs)) },
                     CI_90 = new double[] { ((double)S / (double)pairs - 1.645 * (System.Math.Sqrt(Vars) / (double)pairs)), ((double)S / (double)pairs + 1.645 * (System.Math.Sqrt(Vars) / (double)pairs)) },
                     CI_95 = new double[] { ((double)S / (double)pairs - 1.96 * (System.Math.Sqrt(Vars) / (double)pairs)), ((double)S / (double)pairs + 1.96 * (System.Math.Sqrt(Vars) / (double)pairs)) }
