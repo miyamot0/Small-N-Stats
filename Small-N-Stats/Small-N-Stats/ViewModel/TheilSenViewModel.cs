@@ -2,10 +2,7 @@
 using Small_N_Stats.Mathematics;
 using Small_N_Stats.Model;
 using Small_N_Stats.View;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
