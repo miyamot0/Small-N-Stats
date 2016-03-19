@@ -15,7 +15,7 @@
         Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}"
         Top="{Binding Source={x:Static settings:Settings.Default}, Path=MainTop, Mode=TwoWay}" 
         Left="{Binding Source={x:Static settings:Settings.Default}, Path=MainLeft, Mode=TwoWay}"
-        Title="MainWindow" >
+        Title="Small-N-Stats - New File" >
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
